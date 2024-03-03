@@ -25,6 +25,8 @@ frontEndSchema.pre("save", function(next){
     })     
 })
 
+//findOneAndUpdate
+
 //PASSWORD UNHASHING
 frontEndSchema.methods.validatePassword = function(password,callback){
     bcrypt.compare(password, this.password, (err, same)=>{
