@@ -10,8 +10,9 @@ let userRouter = require("./routes/user.route")
 
 //middleware
 app.use(cors()); //Allow front-end app on different PORT to communicate with backend on another PORT. (cross origin resource sharing)
-app.use(express.urlencoded({extended:true})) // For post request from front end
-app.use(express.json()) // For POST request from front end.- Help to recieve JSON file from front end
+//app.set("*", "cors") //select ports that should have access 
+app.use(express.urlencoded({extended:true, limit:"50mb"})) // For post request from front end
+app.use(express.json({limit:"50mb"})) // For POST request from front end.- Help to recieve JSON file from front end
 
 app.use("/user", userRouter) 
 

@@ -12,8 +12,9 @@ const registerUser = (req,res)=>{
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email:req.body.email,
-            password:req.body.password
-    }
+            password:req.body.password,
+            myfile:req.body.myfile
+     }
     let form = new userModel(userData)
     let userEmail = req.body.email
      
@@ -131,6 +132,10 @@ const sendMail = ()=>{
             .catch((err)=>{console.log(err+ "couldnt edit"); res.send({status:false, message:"could not Edit", result}) })
         }
 
+        //Api_test
+        const api = (req,res) =>{
+            res.send({status:true, message: [{name:"stephen", age:"02"}, {name:"stephen", age:"02"},]})
+            console.log([{name:"stephen", age:"02"}, {name:"stephen", age:"02"},])
+        }
 
-
-module.exports = {displayWelcome, registerUser, signin, getDashboard, sendMail, displaydata, deleteUser, editUser }
+module.exports = {displayWelcome, registerUser, signin, getDashboard, sendMail, displaydata, deleteUser, editUser,api }
