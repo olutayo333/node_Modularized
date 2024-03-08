@@ -8,9 +8,13 @@ let frontEndSchema= mongoose.Schema({
     lastname:{type: String, required:true},
     email:{type: String, required:true, unique:true},
     password:{type:String, required:true },
-    myfile:{type:String, required:true},
-    registrationDate:{type:Date, default:Date.now()}
+    myfile1:{type:String, },
+    myfile2:{type:String},
+    registrationDate:{type:Date, default:Date.now()},
+    randomnumber:{type:String, required:true}
+
 }) 
+
 
 //PASSWORD HASHING
 let saltRound=10;
@@ -40,5 +44,5 @@ frontEndSchema.methods.validatePassword = function(password,callback){
 }
 
 let frontEndModel = mongoose.model("frontendconnect1", frontEndSchema)
-
 module.exports = frontEndModel
+// module.exports = {frontEndModel, uploadModel}
