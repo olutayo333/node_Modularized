@@ -28,6 +28,20 @@ app.listen(PORT,()=>{
     console.log("app is listening at PORT : " + PORT)
 })
 
+//HANDLING ERRORS
+app.use((req, res, next) => {
+    const error = new Error ('Invalid URL');
+    error.status = 404;
+    next(error)
+})
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500 );
+    res.json({
+        error: {message: error.message}
+    })
+})
+
 // To DEPLOY to render
 //Branch = master
 //Root Directory = .

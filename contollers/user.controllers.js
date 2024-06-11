@@ -1,4 +1,6 @@
-    //import {v2 as cloudinary} from 'cloudinary';
+const bcryptjs = require("bcryptjs");
+
+   //import {v2 as cloudinary} from 'cloudinary';
     const cloudinary = require("cloudinary")     
     cloudinary.config({ 
     cloud_name: 'di01u7dxt', 
@@ -9,10 +11,10 @@
 const userModel = require("../models/user.model")
 // const uploadModel = require("../models/user.model")
 let jwt = require("jsonwebtoken")
-let nodemailer = require("nodemailer")     
-const displayWelcome=(req,res  )=>{
-    res.send("welcome user")
-}
+let nodemailer = require("nodemailer");     
+const bcrypt = require("bcryptjs/dist/bcrypt");
+
+const displayWelcome=(req,res  )=>{res.send("welcome user")}
 
 const registerUser = (req,res)=>{
     
@@ -58,7 +60,7 @@ userModel.findOne({email:email})
             if(!same){res.send({status:false,message:"Password Incorrect"})}
             else{
                 //AUTOURIZATION
-                let token = jwt.sign({email}, secret, {expiresIn:300}); console.log(token);//60, "1h", "1d"
+                let token = jwt.sign({email}, secret, {expiresIn:900}); console.log(token);//60, "1h", "1d"
                 
                 //res.send({status:true, message:"successful! welcome", token})
                 userModel.find()
@@ -121,8 +123,9 @@ const sendMail = ()=>{
         jwt.verify(token, secret, (err,result)=>{
          if(err){console.log(err); res.send({status:false, message:"can't signin"})}
          else{
+                const id = _id
                 userModel.find()
-                .then((result)=>{console.log(result); res.send({status:true, message:result, result}  )})
+                .then((result)=>{console.log(result.email); res.send({status:true, message:result, result,}  )})
                 .catch((err)=>{console.log("could not fetch data" + err); res.send({status:false})})
             }
          })
@@ -144,18 +147,37 @@ const sendMail = ()=>{
         }
 
         //edit user
-        const editUser =(req, res)=>{
-            let oldEmail = req.body.email 
-            let {firstname,lastname,newemail,password}=req.body
-            userModel.findOneAndUpdate( {email:oldEmail}, {firstname,lastname,newemail,password}, {new:true})
-            //userModel.findByIdAndUpdate(id, req.body.id)
-            .then((result)=>{res.send({status:true, message:"Edited successfully", result}) })
-            .catch((err)=>{console.log(err+ "couldnt edit"); res.send({status:false, message:"could not Edit", err}) })
+        const editUser =(req, res)=>{ 
+            let pass
+            bcryptjs.hash(req.body.password,10,(err,hashedPassword)=>{
+                //console.log(hashedPassword)
+                if(err){res.send({status:false, message:"could not hash password", err}); console.log("password could not hash" + err)}
+                else{ 
+                    pass = hashedPassword;
+                    
+                    console.log(req.body); console.log("HASHED password is" + pass)
+                    //let oldemail = req.body.oldemail    
+                    let  firstname= req.body.firstname;
+                    let  lastname = req.body.lastname;
+                    let  newemail=req.body.newemail;
+                    let password = pass; 
+                    //let {firstname,lastname,newemail,password}=req.body
+                  userModel.findOneAndUpdate( {email:newemail}, {firstname,lastname,newemail,password}, {new:true} )
+                  //userModel.findByIdAndUpdate(id, req.body.id)
+                  .then((result)=>{res.send({status:true, message:"Edited successfully", result}) })
+                  .catch((err)=>{console.log(err+ "couldnt edit"); res.send({status:false, message:"could not Edit", err}) })
+                }  
+                
+            
+            })
+            
         }
 
         //Api_test
         const api = (req,res) =>{
-            res.send({status:true, message: [{name:"stephen", age:"02"}, {name:"stephen", age:"02"},]})
+            res.send({status:true, message: 
+                [{name:"stephen", age:"02"}, {name:"stephen", age:"02"},]
+            })
             console.log([{name:"stephen", age:"02"}, {name:"stephen", age:"02"},])
         }
 

@@ -26,9 +26,23 @@ frontEndSchema.pre("save", function(next){
        if(err){console.log("password could not hash" + err)}
        else{ 
         this.password = hashedPassword
-        next()}    
+        next()}  
     })     
 })
+
+
+// frontEndSchema.pre("findOneAndUpdate", function(next){
+//     console.log(this.password)
+//     // bcrypt.hash(password,saltRound,callback)
+//     bcryptjs.hash(this.password,saltRound,(err,hashedPassword)=>{
+//         console.log(hashedPassword)
+//        if(err){console.log("password could not hash" + err)}
+//        else{ 
+//         this.password = hashedPassword
+//         next()}  //findOneAndUpdate  
+//     })     
+// })
+
 
 //findOneAndUpdate
 
